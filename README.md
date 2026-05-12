@@ -91,7 +91,7 @@ alembic upgrade head
 python -m app.seed.seed_data
 
 # Start the application
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### Docker Setup
