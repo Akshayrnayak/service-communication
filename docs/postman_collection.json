@@ -1,0 +1,238 @@
+{
+  "info": {
+    "name": "ZenSeva Communication Service",
+    "description": "API collection for the ZenSeva Communication Microservice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Generate Admin Token",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/token?user_id=admin&role=admin"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notification Templates",
+      "item": [
+        {
+          "name": "Create Template",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/templates/",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"template_name\":\"Visit Reminder\",\"template_type\":\"REMINDER\",\"subject\":\"Upcoming Visit\",\"message_body\":\"Dear {{customer_name}}, your visit is on {{date}}.\",\"variables\":[\"customer_name\",\"date\"]}"
+            }
+          }
+        },
+        {
+          "name": "List Templates",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/templates/?page=1&page_size=20",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "WhatsApp Notifications",
+      "item": [
+        {
+          "name": "Send WhatsApp",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/whatsapp/send",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"recipient_phone\":\"+919876543210\",\"recipient_name\":\"Rajesh Kumar\",\"message_body\":\"Your appointment is confirmed for tomorrow.\"}"
+            }
+          }
+        },
+        {
+          "name": "WhatsApp History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/whatsapp/history?page=1&page_size=20",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Notifications",
+      "item": [
+        {
+          "name": "Send Email",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/email/send",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"recipient_email\":\"customer@example.com\",\"recipient_name\":\"Priya Sharma\",\"subject\":\"Report Ready\",\"body_html\":\"<h1>Your report is ready</h1>\",\"is_html\":true}"
+            }
+          }
+        },
+        {
+          "name": "Email History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/email/history",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SMS Notifications",
+      "item": [
+        {
+          "name": "Send SMS",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/sms/send",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"recipient_phone\":\"+919876543210\",\"recipient_name\":\"Amit Patel\",\"message_body\":\"Your OTP is 123456.\"}"
+            }
+          }
+        },
+        {
+          "name": "SMS History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/sms/history",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alert Events",
+      "item": [
+        {
+          "name": "Trigger Emergency Alert",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/alerts/emergency",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"alert_type\":\"EMERGENCY_HEALTH\",\"priority\":\"CRITICAL\",\"title\":\"Patient Critical\",\"description\":\"Immediate attention required.\",\"recipient_id\":\"11111111-1111-1111-1111-111111111111\",\"recipient_phone\":\"+919876543210\",\"recipient_email\":\"doctor@hospital.com\",\"channels_used\":\"SMS,WHATSAPP,EMAIL\"}"
+            }
+          }
+        },
+        {
+          "name": "Alert History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/alerts/history",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reminder Jobs",
+      "item": [
+        {
+          "name": "Schedule Reminder",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/reminders/",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"customer_id\":\"11111111-1111-1111-1111-111111111111\",\"reminder_type\":\"MEDICAL_VISIT\",\"title\":\"Annual Checkup\",\"message\":\"Your checkup is tomorrow at 10 AM.\",\"delivery_channel\":\"WHATSAPP\",\"scheduled_time\":\"2026-06-01T10:00:00Z\"}"
+            }
+          }
+        },
+        {
+          "name": "List Reminders",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/reminders/",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Communication Logs",
+      "item": [
+        {
+          "name": "List Logs",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/logs/?page=1&page_size=20",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          }
+        }
+      ]
+    }
+  ]
+}
