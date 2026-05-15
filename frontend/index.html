@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenSeva Communication Service</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-satellite-dish"></i>
+                <span>ZenSeva</span>
+            </div>
+            <small>Communication Service</small>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="whatsapp">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            <a href="#" class="nav-item" data-page="email">
+                <i class="fas fa-envelope"></i>
+                <span>Email</span>
+            </a>
+            <a href="#" class="nav-item" data-page="sms">
+                <i class="fas fa-sms"></i>
+                <span>SMS</span>
+            </a>
+            <a href="#" class="nav-item" data-page="templates">
+                <i class="fas fa-file-alt"></i>
+                <span>Templates</span>
+            </a>
+            <a href="#" class="nav-item" data-page="reminders">
+                <i class="fas fa-clock"></i>
+                <span>Reminders</span>
+            </a>
+            <a href="#" class="nav-item" data-page="alerts">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="#" class="nav-item" data-page="logs">
+                <i class="fas fa-list-alt"></i>
+                <span>Logs</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span>Disconnected</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="topbar-actions">
+                <button class="btn btn-sm btn-outline" id="authBtn">
+                    <i class="fas fa-key"></i> Authenticate
+                </button>
+                <span class="user-badge" id="userBadge" style="display:none;">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="userRole">admin</span>
+                </span>
+            </div>
+        </header>
+
+        <!-- Page Container -->
+        <div class="page-container">
+            <!-- Dashboard Page -->
+            <section class="page active" id="page-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+                        <div class="stat-info">
+                            <h3 id="stat-whatsapp">0</h3>
+                            <p>WhatsApp Sent</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon email"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-info">
+                            <h3 id="stat-email">0</h3>
+                            <p>Emails Sent</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon sms"><i class="fas fa-sms"></i></div>
+                        <div class="stat-info">
+                            <h3 id="stat-sms">0</h3>
+                            <p>SMS Sent</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon alerts"><i class="fas fa-bell"></i></div>
+                        <div class="stat-info">
+                            <h3 id="stat-alerts">0</h3>
+                            <p>Alerts Triggered</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Communication Logs</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadLogs()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="dashboardLogsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Channel</th>
+                                        <th>Event</th>
+                                        <th>Recipient</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Service Health</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="healthInfo" class="health-info">
+                                <p>Click "Authenticate" to connect to the service.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WhatsApp Page -->
+            <section class="page" id="page-whatsapp">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Send WhatsApp Message</h3></div>
+                        <div class="card-body">
+                            <form id="whatsappForm" class="form">
+                                <div class="form-group">
+                                    <label>Recipient Phone</label>
+                                    <input type="text" id="wa-phone" placeholder="+918197377955" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Name</label>
+                                    <input type="text" id="wa-name" placeholder="Akshay">
+                                </div>
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea id="wa-message" rows="4" placeholder="Type your message..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fab fa-whatsapp"></i> Send WhatsApp
+                                </button>
+                            </form>
+                            <div id="wa-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>WhatsApp History</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadWhatsAppHistory()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="whatsappHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Recipient</th>
+                                        <th>Status</th>
+                                        <th>Retries</th>
+                                        <th>Sent At</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Page -->
+            <section class="page" id="page-email">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Send Email</h3></div>
+                        <div class="card-body">
+                            <form id="emailForm" class="form">
+                                <div class="form-group">
+                                    <label>Recipient Email</label>
+                                    <input type="email" id="em-email" placeholder="akshayrnayak72@gmail.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Name</label>
+                                    <input type="text" id="em-name" placeholder="Akshay">
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <input type="text" id="em-subject" placeholder="Notification Subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Body (HTML supported)</label>
+                                    <textarea id="em-body" rows="5" placeholder="<h1>Hello</h1><p>Your message here...</p>" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-paper-plane"></i> Send Email
+                                </button>
+                            </form>
+                            <div id="em-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Email History</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadEmailHistory()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="emailHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Recipient</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Sent At</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SMS Page -->
+            <section class="page" id="page-sms">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Send SMS</h3></div>
+                        <div class="card-body">
+                            <form id="smsForm" class="form">
+                                <div class="form-group">
+                                    <label>Recipient Phone</label>
+                                    <input type="text" id="sms-phone" placeholder="+918197377955" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Name</label>
+                                    <input type="text" id="sms-name" placeholder="Akshay">
+                                </div>
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea id="sms-message" rows="3" placeholder="Type your SMS..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-sms"></i> Send SMS
+                                </button>
+                            </form>
+                            <div id="sms-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>SMS History</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadSmsHistory()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="smsHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Recipient</th>
+                                        <th>Status</th>
+                                        <th>Retries</th>
+                                        <th>Sent At</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Templates Page -->
+            <section class="page" id="page-templates">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Create Template</h3></div>
+                        <div class="card-body">
+                            <form id="templateForm" class="form">
+                                <div class="form-group">
+                                    <label>Template Name</label>
+                                    <input type="text" id="tpl-name" placeholder="Appointment Reminder" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Type</label>
+                                    <select id="tpl-type" required>
+                                        <option value="REMINDER">Reminder</option>
+                                        <option value="ALERT">Alert</option>
+                                        <option value="VISIT_COMPLETE">Visit Complete</option>
+                                        <option value="DOCUMENT_UPDATE">Document Update</option>
+                                        <option value="GENERAL">General</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <input type="text" id="tpl-subject" placeholder="Subject with {{variables}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Message Body</label>
+                                    <textarea id="tpl-body" rows="4" placeholder="Dear {{customer_name}}, your appointment..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Variables (comma-separated)</label>
+                                    <input type="text" id="tpl-vars" placeholder="customer_name, date, location">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-plus"></i> Create Template
+                                </button>
+                            </form>
+                            <div id="tpl-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>All Templates</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadTemplates()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="templatesList" class="templates-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reminders Page -->
+            <section class="page" id="page-reminders">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Schedule Reminder</h3></div>
+                        <div class="card-body">
+                            <form id="reminderForm" class="form">
+                                <div class="form-group">
+                                    <label>Customer ID</label>
+                                    <input type="text" id="rem-customer" placeholder="11111111-1111-1111-1111-111111111111" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Reminder Type</label>
+                                    <select id="rem-type" required>
+                                        <option value="MEDICAL_VISIT">Medical Visit</option>
+                                        <option value="LEGAL_DOCUMENT">Legal Document</option>
+                                        <option value="INSPECTION">Inspection</option>
+                                        <option value="FOLLOW_UP">Follow Up</option>
+                                        <option value="GENERAL">General</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" id="rem-title" placeholder="Annual Health Checkup" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea id="rem-message" rows="3" placeholder="Reminder message..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Delivery Channel</label>
+                                    <select id="rem-channel" required>
+                                        <option value="WHATSAPP">WhatsApp</option>
+                                        <option value="EMAIL">Email</option>
+                                        <option value="SMS">SMS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Scheduled Time</label>
+                                    <input type="datetime-local" id="rem-time" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-clock"></i> Schedule Reminder
+                                </button>
+                            </form>
+                            <div id="rem-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Scheduled Reminders</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadReminders()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="remindersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Channel</th>
+                                        <th>Scheduled</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alerts Page -->
+            <section class="page" id="page-alerts">
+                <div class="page-grid">
+                    <div class="card">
+                        <div class="card-header"><h3>Trigger Emergency Alert</h3></div>
+                        <div class="card-body">
+                            <form id="alertForm" class="form">
+                                <div class="form-group">
+                                    <label>Alert Type</label>
+                                    <select id="alert-type" required>
+                                        <option value="EMERGENCY_HEALTH">Emergency Health</option>
+                                        <option value="LEGAL_DEADLINE">Legal Deadline</option>
+                                        <option value="SECURITY_BREACH">Security Breach</option>
+                                        <option value="SYSTEM_FAILURE">System Failure</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority</label>
+                                    <select id="alert-priority" required>
+                                        <option value="CRITICAL">Critical</option>
+                                        <option value="HIGH">High</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="LOW">Low</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" id="alert-title" placeholder="Patient Critical Condition" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea id="alert-desc" rows="3" placeholder="Detailed description..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Phone</label>
+                                    <input type="text" id="alert-phone" placeholder="+918197377955" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Email</label>
+                                    <input type="email" id="alert-email" placeholder="akshayrnayak72@gmail.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Channels</label>
+                                    <input type="text" id="alert-channels" value="SMS,WHATSAPP,EMAIL" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-block">
+                                    <i class="fas fa-exclamation-triangle"></i> Trigger Alert
+                                </button>
+                            </form>
+                            <div id="alert-result" class="result-box" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Alert History</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="loadAlerts()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="alertsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Priority</th>
+                                        <th>Channels</th>
+                                        <th>Status</th>
+                                        <th>Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logs Page -->
+            <section class="page" id="page-logs">
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h3>Communication Logs</h3>
+                        <button class="btn btn-sm btn-ghost" onclick="loadLogs()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="logsTable">
+                            <thead>
+                                <tr>
+                                    <th>Channel</th>
+                                    <th>Event Type</th>
+                                    <th>Recipient</th>
+                                    <th>Status</th>
+                                    <th>Message</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Authenticate</h3>
+                <button class="modal-close" onclick="closeModal('authModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" class="form">
+                    <div class="form-group">
+                        <label>User ID</label>
+                        <input type="text" id="auth-userid" value="admin-user">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="auth-role">
+                            <option value="admin">Admin</option>
+                            <option value="staff">Staff</option>
+                            <option value="service">Service</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Generate Token & Connect
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
